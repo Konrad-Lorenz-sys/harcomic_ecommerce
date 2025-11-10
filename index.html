@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ecommerce Comic_HarSan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --morado-oscuro: #240046;
+      --morado: #7b2cbf;
+      --morado-suave: #f3e9ff;
+      --blanco: #ffffff;
+      --gris-fondo: #f5f5fb;
+      --texto: #1f1f1f;
+      --borde-card: #ded2ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #3c096c 0, #240046 35%, #0b0017 100%);
+      color: var(--blanco);
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 1.5rem 1.5rem 0.5rem;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.1rem;
+      letter-spacing: 0.05em;
+    }
+
+    header p {
+      margin: 0.35rem 0 1rem;
+      opacity: 0.8;
+      font-size: 0.95rem;
+    }
+
+    .layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      padding: 0 1.5rem 2rem;
+      align-items: flex-start;
+    }
+
+    .catalogo {
+      flex: 2 1 340px;
+    }
+
+    .carrito {
+      flex: 1 1 280px;
+      background: rgba(12, 0, 30, 0.95);
+      border-radius: 18px;
+      padding: 1.2rem 1.25rem;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+    }
+
+    .carrito-header h2 {
+      margin: 0 0 0.35rem;
+      font-size: 1.15rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .carrito-header span {
+      font-size: 0.95rem;
+      opacity: 0.8;
+    }
+
+    .filtros {
+      margin-bottom: 0.9rem;
+      background: rgba(12, 0, 30, 0.85);
+      border-radius: 16px;
+      padding: 0.8rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      align-items: center;
+      border: 1px solid rgba(139, 92, 246, 0.45);
+    }
+
+    .filtros label {
+      font-size: 0.9rem;
+      opacity: 0.85;
+    }
+
+    .filtros select {
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(180, 156, 255, 0.7);
+      background: rgba(22, 0, 40, 0.95);
+      color: var(--blanco);
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    #productos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1rem;
+    }
+
+    .producto {
+      background: var(--gris-fondo);
+      color: var(--texto);
+      border-radius: 18px;
+      padding: 0.8rem;
+      border: 1px solid var(--borde-card);
+      box-shadow: 0 10px 22px rgba(15, 1, 32, 0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .producto::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at top, rgba(123, 44, 191, 0.09), transparent 60%);
+      pointer-events: none;
+    }
+
+    .producto img {
+      width: 100%;
+      height: 190px;
+      border-radius: 12px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .producto h3 {
+      margin: 0.3rem 0 0.1rem;
+      font-size: 1rem;
+    }
+
+    .producto p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    .chip-categoria {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      background: rgba(123, 44, 191, 0.12);
+      color: #4c1d95;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(123, 44, 191, 0.2);
+      margin-top: 0.15rem;
+    }
+
+    .precio {
+      font-weight: 600;
+      margin-top: 0.25rem;
+    }
+
+    .producto .acciones {
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .btn,
+    .btn-sm {
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: transform 0.1s ease, box-shadow 0.12s ease, background 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+    }
+
+    .btn {
+      padding: 0.45rem 0.9rem;
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.6rem;
+      font-size: 0.8rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      color: var(--blanco);
+      box-shadow: 0 10px 18px rgba(129, 97, 255, 0.55);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 22px rgba(129, 97, 255, 0.75);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(123, 44, 191, 0.65);
+      color: #4c1d95;
+    }
+
+    .btn-outline:hover {
+      background: rgba(123, 44, 191, 0.08);
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      color: var(--blanco);
+    }
+
+    .btn-danger:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: var(--blanco);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .btn:active,
+    .btn-sm:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    #lista-carrito {
+      list-style: none;
+      padding: 0;
+      margin: 0.6rem 0 0.7rem;
+      max-height: 260px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+
+    #lista-carrito::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #lista-carrito::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 255, 0.9);
+      border-radius: 999px;
+    }
+
+    .item-carrito {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.7rem;
+      align-items: center;
+      padding: 0.35rem 0.15rem;
+      border-bottom: 1px solid rgba(148, 163, 255, 0.18);
+      font-size: 0.85rem;
+    }
+
+    .item-carrito:last-child {
+      border-bottom: none;
+    }
+
+    .item-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .item-titulo {
+      font-weight: 500;
+    }
+
+    .item-precio {
+      opacity: 0.8;
+      font-size: 0.8rem;
+    }
+
+    .item-controles {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.8rem;
+    }
+
+    .item-cantidad {
+      min-width: 1.6rem;
+      text-align: center;
+    }
+
+    .totales {
+      border-top: 1px dashed rgba(148, 163, 255, 0.6);
+      padding-top: 0.55rem;
+      margin-top: 0.2rem;
+      font-size: 0.87rem;
+    }
+
+    .totales p {
+      display: flex;
+      justify-content: space-between;
+      margin: 0.15rem 0;
+    }
+
+    .totales .total {
+      margin-top: 0.35rem;
+      font-size: 0.96rem;
+    }
+
+    .totales .total span {
+      font-weight: 700;
+      color: #a5b4fc;
+    }
+
+    .carrito-acciones {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .carrito-acciones button {
+      flex: 1 1 120px;
+    }
+
+    .paypal-container {
+      margin-top: 0.7rem;
+      padding-top: 0.45rem;
+      border-top: 1px dashed rgba(148, 163, 255, 0.5);
+    }
+
+    .badge-empty {
+      font-size: 0.85rem;
+      opacity: 0.7;
+      margin-top: 0.45rem;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 1.2rem 1rem 0.6rem;
+      }
+
+      .layout {
+        padding: 0 1rem 1.6rem;
+      }
+
+      .carrito {
+        order: -1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Ecommerce Comic_HarSan</h1>
+    <p>Elige tus cómics favoritos, llévalos directo al carrito y paga seguro con PayPal (Sandbox).</p>
+  </header>
+
+  <main class="layout">
+    <section class="catalogo" aria-label="Catálogo de cómics">
+      <div class="filtros">
+        <label for="categoria">Filtrar por categoría:</label>
+        <select id="categoria">
+          <option value="todas">Todas</option>
+          <option value="marvel">Marvel</option>
+          <option value="dc">DC</option>
+          <option value="otros">Otros</option>
+        </select>
+      </div>
+
+      <section id="productos" aria-label="Listado de cómics"></section>
+    </section>
+
+    <aside class="carrito" aria-label="Carrito de compras">
+      <div class="carrito-header">
+        <h2>
+          🧾 Carrito de Compras
+          <span>(<span id="cantidad-carrito">0</span> ítems)</span>
+        </h2>
+      </div>
+
+      <ul id="lista-carrito"></ul>
+      <p id="carrito-vacio" class="badge-empty">Tu carrito está vacío. Agrega tu primer cómic 🤓</p>
+
+      <div class="totales">
+        <p>
+          <span>Subtotal</span>
+          <span id="subtotal-text">$0.00</span>
+        </p>
+        <p>
+          <span>Impuestos (10%)</span>
+          <span id="impuestos-text">$0.00</span>
+        </p>
+        <p>
+          <span>Descuento</span>
+          <span id="descuento-text">$0.00</span>
+        </p>
+        <p class="total">
+          <span>Total</span>
+          <span id="total-text">$0.00</span>
+        </p>
+      </div>
+
+      <div class="carrito-acciones">
+        <button id="btn-vaciar" class="btn btn-ghost">🧼 Vaciar carrito</button>
+        <button id="btn-finalizar" class="btn btn-primary">✅ Finalizar compra</button>
+      </div>
+
+      <div id="paypal-button-container" class="paypal-container" hidden></div>
+    </aside>
+  </main>
+
+  <!-- PayPal Sandbox SDK (client-id=sb para pruebas) -->
+  <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD"></script>
+
+  <script>
+    // ==========================
+    // Datos base de productos
+    // ==========================
+    const productos = [
+      {
+        id: 1,
+        nombre: "Hulk",
+        precio: 25.0,
+        categoria: "marvel",
+        imagen: "https://www.cardboardmemories.ca/cdn/shop/files/QASTL317025_592x898.jpg?v=1715727636"
+      },
+      {
+        id: 2,
+        nombre: "Iron Man",
+        precio: 18.0,
+        categoria: "marvel",
+        imagen: "https://images.cdn2.buscalibre.com/fit-in/360x360/b0/2b/b02b8436ec7bb1e24d5fc49a2c1539cf.jpg"
+      },
+      {
+        id: 3,
+        nombre: "Spiderman",
+        precio: 30.0,
+        categoria: "marvel",
+        imagen: "https://images.cdn1.buscalibre.com/fit-in/360x360/b1/9d/b19d48c39423f894d21b31ec91f4305c.jpg"
+      },
+      {
+        id: 4,
+        nombre: "Watchmen",
+        precio: 18.0,
+        categoria: "otros",
+        imagen: "https://i.blogs.es/d5dd2b/watchmendcuniverse/1366_2000.jpg"
+      },
+      {
+        id: 5,
+        nombre: "Batman",
+        precio: 22.0,
+        categoria: "dc",
+        imagen: "https://images.cdn1.buscalibre.com/fit-in/360x360/a5/77/a577bffd80a8742e57af9c6d874e3506.jpg"
+      }
+    ];
+
+    // ==========================
+    // Estado del carrito (Map)
+    // ==========================
+    const carrito = new Map();
+    const STORAGE_KEY = "carritoComicHarSan";
+
+    // ==========================
+    // Helpers
+    // ==========================
+    const formatterUSD = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2
+    });
+
+    function guardarCarrito() {
+      const items = Array.from(carrito.values());
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function cargarCarrito() {
+      const data = localStorage.getItem(STORAGE_KEY);
+      if (!data) return;
+      try {
+        const items = JSON.parse(data);
+        items.forEach((item) => {
+          carrito.set(item.id, item);
+        });
+      } catch (err) {
+        console.error("Error restaurando carrito:", err);
+      }
+    }
+
+    // ==========================
+    // Render de productos
+    // ==========================
+    const contenedorProductos = document.getElementById("productos");
+    const selectCategoria = document.getElementById("categoria");
+
+    function renderProductos(lista = productos) {
+      contenedorProductos.innerHTML = "";
+
+      if (!lista.length) {
+        contenedorProductos.innerHTML =
+          "<p>No hay cómics en esta categoría por ahora.</p>";
+        return;
+      }
+
+      lista.forEach((prod) => {
+        const article = document.createElement("article");
+        article.className = "producto";
+        article.dataset.id = String(prod.id);
+
+        const img = document.createElement("img");
+        img.src = prod.imagen;
+        img.alt = `Portada del cómic ${prod.nombre}`;
+        img.addEventListener("error", () => {
+          img.src =
+            "https://via.placeholder.com/300x450.png?text=Comic+no+disponible";
+        });
+
+        const titulo = document.createElement("h3");
+        titulo.textContent = prod.nombre;
+
+        const chip = document.createElement("span");
+        chip.className = "chip-categoria";
+        chip.textContent =
+          prod.categoria === "marvel"
+            ? "Marvel"
+            : prod.categoria === "dc"
+            ? "DC Comics"
+            : "Otros";
+
+        const precio = document.createElement("p");
+        precio.className = "precio";
+        precio.textContent = formatterUSD.format(prod.precio);
+
+        const acciones = document.createElement("div");
+        acciones.className = "acciones";
+
+        const btnAgregar = document.createElement("button");
+        btnAgregar.className = "btn btn-primary btn-agregar";
+        btnAgregar.dataset.id = String(prod.id);
+        btnAgregar.innerHTML = "Agregar <span>+</span>";
+
+        const btnDetalle = document.createElement("button");
+        btnDetalle.className = "btn btn-outline";
+        btnDetalle.type = "button";
+        btnDetalle.textContent = "Ver más";
+        // Aquí podrías abrir un modal en el futuro
+
+        acciones.appendChild(btnAgregar);
+        acciones.appendChild(btnDetalle);
+
+        article.appendChild(img);
+        article.appendChild(titulo);
+        article.appendChild(chip);
+        article.appendChild(precio);
+        article.appendChild(acciones);
+
+        contenedorProductos.appendChild(article);
+      });
+    }
+
+    function filtrarPorCategoria() {
+      const valor = selectCategoria.value;
+      if (valor === "todas") {
+        renderProductos(productos);
+        return;
+      }
+      const filtrados = productos.filter((p) => p.categoria === valor);
+      renderProductos(filtrados);
+    }
+
+    // ==========================
+    // Carrito: DOM
+    // ==========================
+    const listaCarrito = document.getElementById("lista-carrito");
+    const cantidadCarrito = document.getElementById("cantidad-carrito");
+    const subtotalText = document.getElementById("subtotal-text");
+    const impuestosText = document.getElementById("impuestos-text");
+    const descuentoText = document.getElementById("descuento-text");
+    const totalText = document.getElementById("total-text");
+    const carritoVacio = document.getElementById("carrito-vacio");
+
+    function calcularTotales() {
+      let subtotal = 0;
+      let cantidadTotal = 0;
+
+      carrito.forEach((item) => {
+        subtotal += item.precio * item.cantidad;
+        cantidadTotal += item.cantidad;
+      });
+
+      const impuestos = subtotal * 0.1; // 10%
+      const descuento = subtotal > 100 ? subtotal * 0.05 : 0; // 5% sobre compras grandes
+      const total = subtotal + impuestos - descuento;
+
+      return { subtotal, impuestos, descuento, total, cantidadTotal };
+    }
+
+    function actualizarCarrito() {
+      listaCarrito.innerHTML = "";
+
+      if (carrito.size === 0) {
+        carritoVacio.style.display = "block";
+      } else {
+        carritoVacio.style.display = "none";
+      }
+
+      carrito.forEach((item) => {
+        const li = document.createElement("li");
+        li.className = "item-carrito";
+        li.dataset.id = String(item.id);
+
+        const info = document.createElement("div");
+        info.className = "item-info";
+
+        const titulo = document.createElement("span");
+        titulo.className = "item-titulo";
+        titulo.textContent = item.nombre;
+
+        const precio = document.createElement("span");
+        precio.className = "item-precio";
+        precio.textContent = formatterUSD.format(item.precio * item.cantidad);
+
+        info.appendChild(titulo);
+        info.appendChild(precio);
+
+        const controles = document.createElement("div");
+        controles.className = "item-controles";
+
+        const btnDec = document.createElement("button");
+        btnDec.className = "btn-sm btn-ghost btn-dec";
+        btnDec.dataset.id = String(item.id);
+        btnDec.textContent = "-";
+
+        const cantidad = document.createElement("span");
+        cantidad.className = "item-cantidad";
+        cantidad.textContent = item.cantidad;
+
+        const btnInc = document.createElement("button");
+        btnInc.className = "btn-sm btn-ghost btn-inc";
+        btnInc.dataset.id = String(item.id);
+        btnInc.textContent = "+";
+
+        const btnRemove = document.createElement("button");
+        btnRemove.className = "btn-sm btn-danger btn-remove";
+        btnRemove.dataset.id = String(item.id);
+        btnRemove.textContent = "✕";
+
+        controles.appendChild(btnDec);
+        controles.appendChild(cantidad);
+        controles.appendChild(btnInc);
+        controles.appendChild(btnRemove);
+
+        li.appendChild(info);
+        li.appendChild(controles);
+
+        listaCarrito.appendChild(li);
+      });
+
+      const { subtotal, impuestos, descuento, total, cantidadTotal } =
+        calcularTotales();
+
+      cantidadCarrito.textContent = String(cantidadTotal);
+      subtotalText.textContent = formatterUSD.format(subtotal);
+      impuestosText.textContent = formatterUSD.format(impuestos);
+      descuentoText.textContent = formatterUSD.format(descuento);
+      totalText.textContent = formatterUSD.format(total);
+
+      guardarCarrito();
+      actualizarPaypal(total);
+    }
+
+    function agregarAlCarrito(id) {
+      const producto = productos.find((p) => p.id === id);
+      if (!producto) return;
+
+      const existente = carrito.get(id);
+      if (existente) {
+        existente.cantidad += 1;
+      } else {
+        carrito.set(id, { ...producto, cantidad: 1 });
+      }
+      actualizarCarrito();
+    }
+
+    function cambiarCantidad(id, delta) {
+      const item = carrito.get(id);
+      if (!item) return;
+      const nuevaCantidad = item.cantidad + delta;
+      if (nuevaCantidad <= 0) {
+        carrito.delete(id);
+      } else {
+        item.cantidad = nuevaCantidad;
+      }
+      actualizarCarrito();
+    }
+
+    function eliminarDelCarrito(id) {
+      carrito.delete(id);
+      actualizarCarrito();
+    }
+
+    function vaciarCarrito() {
+      if (!carrito.size) return;
+      const confirmar = window.confirm(
+        "¿Seguro que quieres vaciar todo el carrito?"
+      );
+      if (!confirmar) return;
+      carrito.clear();
+      actualizarCarrito();
+    }
+
+    function finalizarCompra() {
+      if (!carrito.size) {
+        alert("Tu carrito está vacío. Agrega algunos cómics antes de pagar.");
+        return;
+      }
+      alert(
+        "Esta acción simula el cierre manual de compra. Para pago real usa el botón de PayPal."
+      );
+    }
+
+    // ==========================
+    // PayPal Sandbox
+    // ==========================
+    let paypalButtons = null;
+
+    function initPaypal() {
+      if (typeof paypal === "undefined" || paypalButtons) return;
+
+      paypalButtons = paypal.Buttons({
+        style: {
+          layout: "vertical"
+        },
+        createOrder: function (data, actions) {
+          const { total } = calcularTotales();
+          return actions.order.create({
+            purchase_units: [
+              {
+                description: "Compra en Comic_HarSan",
+                amount: {
+                  value: total.toFixed(2),
+                  currency_code: "USD"
+                }
+              }
+            ]
+          });
+        },
+        onApprove: function (data, actions) {
+          return actions.order.capture().then(function (details) {
+            alert(
+              "Gracias " +
+                details.payer.name.given_name +
+                ", tu compra está confirmada (Sandbox)."
+            );
+            carrito.clear();
+            actualizarCarrito();
+          });
+        },
+        onError: function (err) {
+          console.error("Error en PayPal:", err);
+          alert("Ocurrió un problema con el pago. Intenta de nuevo.");
+        }
+      });
+
+      paypalButtons.render("#paypal-button-container");
+    }
+
+    function actualizarPaypal(total) {
+      const container = document.getElementById("paypal-button-container");
+      if (total > 0) {
+        container.hidden = false;
+        initPaypal();
+      } else {
+        container.hidden = true;
+      }
+    }
+
+    // ==========================
+    // Eventos
+    // ==========================
+    document.addEventListener("DOMContentLoaded", () => {
+      // Restaurar carrito y dibujar
+      cargarCarrito();
+      renderProductos();
+      actualizarCarrito();
+
+      // Filtro por categoría
+      selectCategoria.addEventListener("change", filtrarPorCategoria);
+
+      // Delegación: agregar al carrito
+      contenedorProductos.addEventListener("click", (e) => {
+        const btn = e.target.closest(".btn-agregar");
+        if (!btn) return;
+        const id = Number(btn.dataset.id);
+        agregarAlCarrito(id);
+      });
+
+      // Delegación: controles del carrito
+      listaCarrito.addEventListener("click", (e) => {
+        const btnInc = e.target.closest(".btn-inc");
+        const btnDec = e.target.closest(".btn-dec");
+        const btnRemove = e.target.closest(".btn-remove");
+
+        if (btnInc) {
+          const id = Number(btnInc.dataset.id);
+          cambiarCantidad(id, 1);
+        } else if (btnDec) {
+          const id = Number(btnDec.dataset.id);
+          cambiarCantidad(id, -1);
+        } else if (btnRemove) {
+          const id = Number(btnRemove.dataset.id);
+          eliminarDelCarrito(id);
+        }
+      });
+
+      // Botones principales
+      const btnVaciar = document.getElementById("btn-vaciar");
+      const btnFinalizar = document.getElementById("btn-finalizar");
+
+      btnVaciar.addEventListener("click", vaciarCarrito);
+      btnFinalizar.addEventListener("click", finalizarCompra);
+    });
+  </script>
+</body>
+</html>
